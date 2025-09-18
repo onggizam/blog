@@ -1,0 +1,16 @@
+export const STATE = {
+  host: "blog",
+  user: "onggizam",
+  cwd: "~",
+  lang: document.body.getAttribute("data-lang") || "en",
+  theme: "terminal",
+  posts: [],
+  indexBySlug: new Map(),
+  view: "terminal",
+  history: [],
+  historyIdx: -1,
+  activeInput: null,
+  activeCaret: null,
+  ac: { base: "", candidates: [], idx: -1, lastTs: 0 },
+  searchQuery: "",
+};

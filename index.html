@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>onggizam@blog:~$</title>
+    <link rel="icon" href="assets/favicon.ico" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="theme-terminal" data-lang="en">
+    <div id="app">
+      <header class="site-header">
+        <div class="brand">
+          <span class="host">onggizam</span><span class="at">@</span
+          ><span class="user">blog</span>:<span class="path">~</span
+          ><span class="prompt">$</span>
+        </div>
+        <nav class="quick-actions">
+          <button id="btnThemeToggle" class="btn small" title="Toggle theme">
+            Terminal
+          </button>
+          <button id="btnLangToggle" class="btn small" title="Toggle language">
+            EN
+          </button>
+        </nav>
+        <!-- highlight.js CSS -->
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+        />
+
+        <!-- highlight.js JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+      </header>
+
+      <main id="terminal-scene" class="scene">
+        <div class="terminal-wrap">
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <div class="traffic">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="title">onggizam@blog:~$</div>
+              <div class="spacer"></div>
+            </div>
+            <div
+              id="terminal-output"
+              class="terminal-output"
+              aria-live="polite"
+            ></div>
+            <!-- Create prompt line in JS-->
+          </div>
+        </div>
+      </main>
+
+      <main id="blog-scene" class="scene hidden">
+        <div class="blog-container">
+          <aside class="blog-sidebar">
+            <h2 class="blog-title" data-i18n="posts">Posts</h2>
+            <input
+              id="post-search"
+              class="search-input"
+              type="search"
+              placeholder="Search by title or tag…"
+            />
+            <ul id="post-list" class="post-list"></ul>
+          </aside>
+          <article id="post-view" class="post-view">
+            <div class="post-chrome">
+              <button id="btnBackToList" class="btn small" data-i18n="back">
+                Back to list
+              </button>
+            </div>
+            <h1 id="post-title" class="post-h1"></h1>
+            <p id="post-meta" class="post-meta"></p>
+            <div id="post-content" class="markdown"></div>
+          </article>
+        </div>
+      </main>
+
+      <footer class="site-footer">Copyright (c) 2025 Seunggi Hong</footer>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
