@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from __future__ import annotations
 import argparse
 import json
@@ -14,7 +17,6 @@ except Exception:
     yaml = None
 
 H1_RE = re.compile(r"^\s*#\s+(.+?)\s*$", re.MULTILINE)
-FRONT_RE = re.compile(r"^---\s*\n([\s\S]*?)\n---\s*", re.UNICODE)
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 @dataclass
@@ -25,18 +27,13 @@ class PostMeta:
     tags: List[str] = None  # type: ignore
 
     def as_dict(self) -> Dict[str, Any]:
-        return {
-            "slug": self.slug,
-            "title": self.title,
-            "date": self.date,
-            "tags": self.tags or [],
-        }
+        return {"slug": self.slug, "title": self.title, "date": self.date, "tags": self.tags or []}
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Generate manifest.json for blog/<lang> and clean tags footer in *.md")
+    p = argparse.ArgumentParser(description="Generate manifest.json for blog/<lang>; strip last 4 lines from *.md as meta")
     p.add_argument("--root", default="blog", help="Root directory (default: blog)")
     p.add_argument("--langs", nargs="*", default=["en", "kr"], help="Language folders to scan (default: en kr)")
-    p.add_argument("--dry-run", action="store_true", help="Do not write files; just print results")
+    p.add_argument("--dry-run", action="store_true", help="Preview changes without writing files")
     p.add_argument("--verbose", "-v", action="store_true", help="Verbose logs")
     return p.parse_args()
 
@@ -45,27 +42,6 @@ def safe_read_text(path: Path) -> str:
         return path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         return path.read_text(encoding="latin-1")
-
-def parse_front_matter_for_title_date(md: str) -> Dict[str, Any]:
-    m = FRONT_RE.match(md)
-    if not m:
-        return {}
-    raw = m.group(1).strip()
-    if yaml:
-        try:
-            data = yaml.safe_load(raw) or {}
-            if isinstance(data, dict):
-                return {k: data.get(k) for k in ("title", "date")}
-        except Exception:
-            return {}
-
-    out: Dict[str, Any] = {}
-    for line in raw.splitlines():
-        m2 = re.match(r"^\s*(title|date)\s*:\s*(.+?)\s*$", line)
-        if m2:
-            k, v = m2.group(1), m2.group(2).strip().strip("'\"")
-            out[k] = v
-    return out
 
 def first_h1_as_title(md: str) -> Optional[str]:
     m = H1_RE.search(md)
@@ -88,82 +64,73 @@ def normalize_date(val: Optional[str]) -> str:
     except Exception:
         return ""
 
-def extract_and_strip_tags_footer(md: str) -> Tuple[List[str], str]:
-    lines = md.rstrip().splitlines()
-    if not lines:
-        return [], md
-
-    tag_start_idx = None
-    for i in range(len(lines) - 1, -1, -1):
-        if re.match(r"^\s*tags\s*:", lines[i], flags=re.IGNORECASE):
-            tag_start_idx = i
-            break
-        if lines[i].strip() != "":
-            break
-
-    if tag_start_idx is None:
-        return [], md 
-    
-    tag_block = [lines[tag_start_idx]]
-    j = tag_start_idx + 1
-    while j < len(lines) and (lines[j].strip().startswith("-") or lines[j].strip().startswith("*") or lines[j].strip() == "" or re.match(r"^\s+\S+", lines[j])):
-        tag_block.append(lines[j])
-        j += 1
-
-    raw = "\n".join(tag_block)
-
-    m_inline = re.match(r"(?is)^\s*tags\s*:\s*\[(.*?)\]\s*$", raw)
-    if m_inline:
-        inner = m_inline.group(1)
-        tags = [x.strip().strip("'\"").lstrip("#") for x in inner.split(",") if x.strip()]
+def normalize_tags(tags: Any) -> List[str]:
+    if tags is None:
+        return []
+    if isinstance(tags, str):
+        if tags.strip().startswith("[") and tags.strip().endswith("]"):
+            inner = tags.strip()[1:-1]
+            parts = [x.strip() for x in inner.split(",")]
+        else:
+            parts = re.split(r"[,\s]+", tags.strip())
+    elif isinstance(tags, (list, tuple)):
+        parts = [str(x) for x in tags]
     else:
-        m_csv = re.match(r"(?is)^\s*tags\s*:\s*(.+?)\s*$", lines[tag_start_idx])
-        tags: List[str] = []
-        if m_csv:
-            rest = m_csv.group(1).strip()
-            if rest:
-                parts = re.split(r"[,\s]+", rest)
-                tags.extend([p.strip().strip("'\"").lstrip("#") for p in parts if p.strip()])
-        if len(tag_block) > 1:
-            for ln in tag_block[1:]:
-                m_item = re.match(r"^\s*[-*]\s*(.+?)\s*$", ln)
-                if m_item:
-                    tags.append(m_item.group(1).strip().strip("'\"").lstrip("#"))
-
+        return []
     out, seen = [], set()
-    for t in tags:
-        t = t.strip()
-        if not t:
+    for x in parts:
+        x = x.strip().strip("'\"").lstrip("#")
+        if not x:
             continue
-        key = t.lower()
+        key = x.lower()
         if key in seen:
             continue
         seen.add(key)
-        out.append(t)
+        out.append(x)
+    return out
 
-    cleaned_lines = lines[:tag_start_idx] + lines[j:]
-    cleaned_md = ("\n".join(cleaned_lines)).rstrip() + "\n"
-    return out, cleaned_md
+def extract_last4_meta(md: str) -> Tuple[Dict[str, Any], str]:
+    lines = md.rstrip().splitlines()
+    if len(lines) < 4:
+        return {}, md
+    last4 = lines[-4:]
+    meta_block = "\n".join(last4)
+    meta: Dict[str, Any] = {}
+    if yaml:
+        try:
+            y = yaml.safe_load(meta_block) or {}
+            if isinstance(y, dict):
+                meta = {k: y.get(k) for k in ("title", "date", "tags") if k in y}
+        except Exception:
+            pass
+    if not meta:
+        for line in last4:
+            m = re.match(r"^\s*(title|date|tags)\s*:\s*(.+?)\s*$", line)
+            if m:
+                k, v = m.group(1), m.group(2).strip()
+                meta[k] = v
+    title = (meta.get("title") or "").strip().strip("'\"")
+    date = normalize_date(meta.get("date"))
+    tags = normalize_tags(meta.get("tags"))
+    meta_norm = {"title": title, "date": date, "tags": tags}
+    cleaned = "\n".join(lines[:-4]).rstrip() + "\n"
+    return meta_norm, cleaned
 
 def collect_post(lang_dir: Path, md_path: Path, dry_run: bool=False, verbose: bool=False) -> Optional[PostMeta]:
     slug = md_path.stem
     md = safe_read_text(md_path)
-
-    fm = parse_front_matter_for_title_date(md)
-    title = fm.get("title") or first_h1_as_title(md) or slug
-    date = normalize_date(fm.get("date"))
-
-    tags, cleaned = extract_and_strip_tags_footer(md)
+    footer_meta, cleaned = extract_last4_meta(md)
+    title = footer_meta.get("title") or first_h1_as_title(md) or slug
+    date = footer_meta.get("date") or ""
+    tags = footer_meta.get("tags") or []
     if cleaned != md and not dry_run:
         md_path.write_text(cleaned, encoding="utf-8")
         if verbose:
-            print(f"[clean] stripped tags footer: {md_path.name}")
+            print(f"[clean] stripped last 4 lines as meta: {md_path.name}")
     elif cleaned != md and dry_run and verbose:
-        print(f"[dry-run] would strip tags footer: {md_path.name}")
-
+        print(f"[dry-run] would strip last 4 lines as meta: {md_path.name}")
     if verbose:
         print(f"[info] {lang_dir.name}/{md_path.name} → title='{title}', date='{date}', tags={tags}")
-
     return PostMeta(slug=slug, title=title, date=date, tags=tags)
 
 def sort_by_date_desc(posts: List[PostMeta]) -> List[PostMeta]:
@@ -192,23 +159,19 @@ def main():
     if not root.exists():
         print(f"[error] root not found: {root}", file=sys.stderr)
         sys.exit(1)
-
     for lang in args.langs:
         lang_dir = root / lang
         if not lang_dir.exists():
             if args.verbose:
                 print(f"[warn] skip missing dir: {lang_dir}", file=sys.stderr)
             continue
-
         posts: List[PostMeta] = []
         for md_path in sorted(lang_dir.glob("*.md")):
             meta = collect_post(lang_dir, md_path, dry_run=args.dry_run, verbose=args.verbose)
             if meta:
                 posts.append(meta)
-
         posts = sort_by_date_desc(posts)
         write_manifest(lang_dir, posts, dry_run=args.dry_run, verbose=args.verbose)
-
     if args.dry_run:
         print("[dry-run] no files were written.")
 
