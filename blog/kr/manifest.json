@@ -1,16 +1,3 @@
 {
-  "posts": [
-    {
-      "slug": "hello-world",
-      "title": "헬로 월드",
-      "date": "2025-09-01",
-      "tags": ["소개"]
-    },
-    {
-      "slug": "k8s-ha-notes",
-      "title": "쿠버네티스 HA 구성 노트",
-      "date": "2025-09-10",
-      "tags": ["k8s", "HA", "etcd"]
-    }
-  ]
+  "posts": []
 }
