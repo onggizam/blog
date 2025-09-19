@@ -113,17 +113,28 @@ export async function openPost(slug) {
     const filename = `${slug}.md`;
     const meta = STATE.indexBySlug.get(slug);
     const title = extractTitleFromMarkdown(md, meta?.title || filename);
+
     postTitleEl.textContent = title;
+
+    let metaLine = filename;
+    if (meta?.date) metaLine += ` • ${meta.date}`;
+
+    let tagsLine = "";
+    if (meta?.tags?.length) {
+      tagsLine = `<div class="tags-inline">
+        ${meta.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
+      </div>`;
+    }
+
     postMetaEl.innerHTML = `
-      ${filename}
-      ${
-        meta?.tags?.length
-          ? ` • <span class="tags-inline">${meta.tags
-              .map((tag) => `<span class="tag">${tag}</span>`)
-              .join("")}</span>`
-          : ""
-      }
-    `;
+  ${filename}${meta?.date ? ` • ${meta.date}` : ""}
+  ${
+    meta?.tags?.length
+      ? meta.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")
+      : ""
+  }
+`;
+
     postContentEl.innerHTML = renderMarkdown(md);
     print(t(STATE, "opened", filename), "ok");
   } catch {
