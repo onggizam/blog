@@ -1,3 +1,13 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "slug": "onprem-ha-k8s",
+      "title": "HA Kubernetes Cluster 구축기",
+      "date": "2025-09-03",
+      "tags": [
+        "kubernetes",
+        "HA구성"
+      ]
+    }
+  ]
 }

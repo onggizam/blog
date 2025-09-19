@@ -1,3 +1,13 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "slug": "onprem-ha-k8s",
+      "title": "Building an HA Kubernetes Cluster",
+      "date": "2025-09-03",
+      "tags": [
+        "kubernetes",
+        "HA"
+      ]
+    }
+  ]
 }
