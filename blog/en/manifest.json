@@ -4,30 +4,25 @@
       "slug": "how-to-manage-multi-clusters",
       "title": "Moving Between Multiple Kubernetes Clusters – How I Solved the Inconvenience",
       "date": "2025-09-10",
-      "tags": [
-        "k8s",
-        "multi-cluster",
-        "CLI"
-      ]
+      "tags": ["k8s", "multi-cluster", "CLI"]
     },
     {
       "slug": "onprem-ha-k8s",
       "title": "Building an HA Kubernetes Cluster",
       "date": "2025-09-03",
-      "tags": [
-        "kubernetes",
-        "HA"
-      ]
+      "tags": ["kubernetes", "HA"]
     },
     {
       "slug": "code-repo-migration",
       "title": "Migrating from GitLab to GitHub",
-      "date": "2025-08-28",
-      "tags": [
-        "GitHub",
-        "GitLab",
-        "Migration"
-      ]
+      "date": "2025-06-17",
+      "tags": ["GitHub", "GitLab", "Migration"]
+    },
+    {
+      "slug": "gitops",
+      "title": "GitOps Adoption Story",
+      "date": "2025-06-10",
+      "tags": ["GitOps", "CICD"]
     }
   ]
 }

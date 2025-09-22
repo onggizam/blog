@@ -4,30 +4,25 @@
       "slug": "how-to-manage-multi-clusters",
       "title": "여러 쿠버네티스 클러스터를 오가며 – 내가 불편함을 해결한 방식",
       "date": "2025-09-10",
-      "tags": [
-        "k8s",
-        "multi-cluster",
-        "CLI"
-      ]
+      "tags": ["k8s", "multi-cluster", "CLI"]
     },
     {
       "slug": "onprem-ha-k8s",
       "title": "HA Kubernetes Cluster 구축기",
       "date": "2025-09-03",
-      "tags": [
-        "kubernetes",
-        "HA구성"
-      ]
+      "tags": ["kubernetes", "HA구성"]
     },
     {
       "slug": "code-repo-migration",
       "title": "GitLab에서 GitHub으로 레포지토리 마이그레이션",
-      "date": "2025-08-28",
-      "tags": [
-        "GitHub",
-        "GitLab",
-        "Migration"
-      ]
+      "date": "2025-06-17",
+      "tags": ["GitHub", "GitLab", "Migration"]
+    },
+    {
+      "slug": "gitops",
+      "title": "GitOps 도입기",
+      "date": "2025-06-10",
+      "tags": ["GitOps", "CICD"]
     }
   ]
 }
