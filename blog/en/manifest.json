@@ -4,89 +4,55 @@
       "slug": "how-to-manage-multi-clusters",
       "title": "Moving Between Multiple Kubernetes Clusters – How I Solved the Inconvenience",
       "date": "2025-09-10",
-      "tags": [
-        "k8s",
-        "multi-cluster",
-        "CLI"
-      ]
+      "tags": ["k8s", "multi-cluster", "CLI"]
     },
     {
       "slug": "onprem-ha-k8s",
       "title": "Building an HA Kubernetes Cluster",
       "date": "2025-09-03",
-      "tags": [
-        "kubernetes",
-        "HA"
-      ]
+      "tags": ["kubernetes", "HA"]
     },
     {
       "slug": "code-repo-migration",
       "title": "Migrating from GitLab to GitHub",
       "date": "2025-06-17",
-      "tags": [
-        "GitHub",
-        "GitLab",
-        "Migration"
-      ]
+      "tags": ["GitHub", "GitLab", "Migration"]
     },
     {
       "slug": "gitops",
       "title": "GitOps Adoption Story",
       "date": "2025-06-10",
-      "tags": [
-        "GitOps",
-        "CICD"
-      ]
+      "tags": ["GitOps", "CICD"]
     },
     {
       "slug": "kubectl-ai-opensource",
-      "title": "Open Source Contribution Experience: When I Didn’t Overlook a TODO Comment",
+      "title": "Open Source Contribution Experience: Fill in the TODO comments",
       "date": "2025-05-13",
-      "tags": [
-        "‘kubectl’",
-        "‘open-source’"
-      ]
+      "tags": ["‘kubectl’", "‘open-source’"]
     },
     {
       "slug": "time-series-etl-pipeline",
       "title": "Handling Time-Series Resource Usage Data – Building an ETL Pipeline",
       "date": "2025-03-31",
-      "tags": [
-        "ETL",
-        "BigData",
-        "Airflow"
-      ]
+      "tags": ["ETL", "BigData", "Airflow"]
     },
     {
       "slug": "mlops-my-paper",
       "title": "Scalable MLOps on Container-Based Cloud",
       "date": "2024-12-21",
-      "tags": [
-        "MLOps",
-        "Paper",
-        "Kubernetes"
-      ]
+      "tags": ["MLOps", "Paper", "Kubernetes"]
     },
     {
       "slug": "distributed-training-tools",
       "title": "Distributed Training: Why I Moved from Horovod to Ray",
       "date": "2024-09-10",
-      "tags": [
-        "Horovod",
-        "Ray",
-        "Distributed-Training"
-      ]
+      "tags": ["Horovod", "Ray", "Distributed-Training"]
     },
     {
       "slug": "data-locality",
       "title": "Ensuring Data Locality in Kubernetes",
       "date": "2024-06-01",
-      "tags": [
-        "data-locality",
-        "k8s",
-        "alluxio",
-        "spark"
-      ]
+      "tags": ["data-locality", "k8s", "alluxio", "spark"]
     }
   ]
 }

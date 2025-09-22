@@ -4,89 +4,55 @@
       "slug": "how-to-manage-multi-clusters",
       "title": "여러 쿠버네티스 클러스터를 오가며 – 내가 불편함을 해결한 방식",
       "date": "2025-09-10",
-      "tags": [
-        "k8s",
-        "multi-cluster",
-        "CLI"
-      ]
+      "tags": ["k8s", "multi-cluster", "CLI"]
     },
     {
       "slug": "onprem-ha-k8s",
       "title": "HA Kubernetes Cluster 구축기",
       "date": "2025-09-03",
-      "tags": [
-        "kubernetes",
-        "HA구성"
-      ]
+      "tags": ["kubernetes", "HA구성"]
     },
     {
       "slug": "code-repo-migration",
       "title": "GitLab에서 GitHub으로 레포지토리 마이그레이션",
       "date": "2025-06-17",
-      "tags": [
-        "GitHub",
-        "GitLab",
-        "Migration"
-      ]
+      "tags": ["GitHub", "GitLab", "Migration"]
     },
     {
       "slug": "gitops",
       "title": "GitOps 도입기",
       "date": "2025-06-10",
-      "tags": [
-        "GitOps",
-        "CICD"
-      ]
+      "tags": ["GitOps", "CICD"]
     },
     {
       "slug": "kubectl-ai-opensource",
-      "title": "오픈소스 기여 경험: TODO 주석을 그냥 지나치지 않았을 때",
+      "title": "오픈소스 기여 경험: TODO 주석을 채우자",
       "date": "2025-05-13",
-      "tags": [
-        "kubectl",
-        "open-source"
-      ]
+      "tags": ["kubectl", "open-source"]
     },
     {
       "slug": "time-series-etl-pipeline",
       "title": "시계열 자원 사용량 데이터를 다루며 – ETL 파이프라인 구축기",
       "date": "2025-03-31",
-      "tags": [
-        "ETL",
-        "BigData",
-        "Airflow"
-      ]
+      "tags": ["ETL", "BigData", "Airflow"]
     },
     {
       "slug": "mlops-my-paper",
       "title": "컨테이너 기반 클라우드 위에서 구현하는 Scalable MLOps",
       "date": "2024-12-21",
-      "tags": [
-        "MLOps",
-        "Paper",
-        "Kubernetes"
-      ]
+      "tags": ["MLOps", "Paper", "Kubernetes"]
     },
     {
       "slug": "distributed-trainig-tools",
       "title": "분산 학습, Horovod에서 Ray로 갈아탄 이유",
       "date": "2024-09-10",
-      "tags": [
-        "Horovod",
-        "Ray",
-        "Distributed-Training"
-      ]
+      "tags": ["Horovod", "Ray", "Distributed-Training"]
     },
     {
       "slug": "data-locality",
       "title": "쿠버네티스에서 데이터 지역성 보장하기",
       "date": "2024-06-01",
-      "tags": [
-        "data-locality",
-        "k8s",
-        "alluxio",
-        "spark"
-      ]
+      "tags": ["data-locality", "k8s", "alluxio", "spark"]
     }
   ]
 }
