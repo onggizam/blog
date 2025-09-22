@@ -2,7 +2,7 @@ export const STATE = {
   host: "blog",
   user: "onggizam",
   cwd: "~",
-  lang: document.body.getAttribute("data-lang") || "en",
+  lang: document.body.getAttribute("data-lang") || "kr",
   theme: "terminal",
   posts: [],
   indexBySlug: new Map(),
