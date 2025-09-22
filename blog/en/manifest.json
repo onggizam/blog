@@ -1,13 +1,16 @@
 {
   "posts": [
     {
+      "slug": "how-to-manage-multi-clusters",
+      "title": "Moving Between Multiple Kubernetes Clusters – How I Solved the Inconvenience",
+      "date": "2025-09-10",
+      "tags": ["k8s", "multi-cluster", "CLI"]
+    },
+    {
       "slug": "onprem-ha-k8s",
       "title": "Building an HA Kubernetes Cluster",
       "date": "2025-09-03",
-      "tags": [
-        "kubernetes",
-        "HA"
-      ]
+      "tags": ["kubernetes", "HA"]
     }
   ]
 }

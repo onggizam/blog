@@ -30,11 +30,11 @@ class PostMeta:
         return {"slug": self.slug, "title": self.title, "date": self.date, "tags": self.tags or []}
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Generate manifest.json for blog/<lang>; strip last 4 lines from *.md as meta")
-    p.add_argument("--root", default="blog", help="Root directory (default: blog)")
-    p.add_argument("--langs", nargs="*", default=["en", "kr"], help="Language folders to scan (default: en kr)")
-    p.add_argument("--dry-run", action="store_true", help="Preview changes without writing files")
-    p.add_argument("--verbose", "-v", action="store_true", help="Verbose logs")
+    p = argparse.ArgumentParser(description="Generate manifest.json for blog/<lang>")
+    p.add_argument("--root", default="blog")
+    p.add_argument("--langs", nargs="*", default=["en", "kr"])
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--verbose", "-v", action="store_true")
     return p.parse_args()
 
 def safe_read_text(path: Path) -> str:
@@ -142,8 +142,27 @@ def sort_by_date_desc(posts: List[PostMeta]) -> List[PostMeta]:
             return (1, 0, p.slug.lower())
     return sorted(posts, key=keyfn)
 
+def load_existing_manifest(lang_dir: Path, verbose: bool=False) -> List[Dict[str, Any]]:
+    out_path = lang_dir / "manifest.json"
+    if not out_path.exists():
+        return []
+    try:
+        data = json.loads(out_path.read_text(encoding="utf-8"))
+        return data.get("posts", [])
+    except Exception as e:
+        if verbose:
+            print(f"[warn] failed to parse existing manifest: {e}", file=sys.stderr)
+        return []
+
 def write_manifest(lang_dir: Path, posts: List[PostMeta], dry_run: bool=False, verbose: bool=False) -> None:
-    payload = {"posts": [p.as_dict() for p in posts]}
+    existing = load_existing_manifest(lang_dir, verbose=verbose)
+    existing_map = {p["slug"]: p for p in existing}
+    for p in posts:
+        if p.slug not in existing_map:  # 절대 갱신하지 않고 신규만 추가
+            existing_map[p.slug] = p.as_dict()
+    merged = list(existing_map.values())
+    merged_posts = sort_by_date_desc([PostMeta(**p) for p in merged])
+    payload = {"posts": [p.as_dict() for p in merged_posts]}
     out_path = lang_dir / "manifest.json"
     if dry_run:
         print(f"--- {lang_dir.name}/manifest.json (dry-run) ---")
@@ -170,7 +189,6 @@ def main():
             meta = collect_post(lang_dir, md_path, dry_run=args.dry_run, verbose=args.verbose)
             if meta:
                 posts.append(meta)
-        posts = sort_by_date_desc(posts)
         write_manifest(lang_dir, posts, dry_run=args.dry_run, verbose=args.verbose)
     if args.dry_run:
         print("[dry-run] no files were written.")

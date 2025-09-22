@@ -1,13 +1,16 @@
 {
   "posts": [
     {
+      "slug": "how-to-manage-multi-clusters",
+      "title": "여러 쿠버네티스 클러스터를 오가며 – 내가 불편함을 해결한 방식",
+      "date": "2025-09-10",
+      "tags": ["k8s", "multi-cluster", "CLI"]
+    },
+    {
       "slug": "onprem-ha-k8s",
       "title": "HA Kubernetes Cluster 구축기",
       "date": "2025-09-03",
-      "tags": [
-        "kubernetes",
-        "HA구성"
-      ]
+      "tags": ["kubernetes", "HA구성"]
     }
   ]
 }
