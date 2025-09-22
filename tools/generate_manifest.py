@@ -89,12 +89,22 @@ def normalize_tags(tags: Any) -> List[str]:
         out.append(x)
     return out
 
-def extract_last4_meta(md: str) -> Tuple[Dict[str, Any], str]:
+def extract_meta_block(md: str) -> Tuple[Dict[str, Any], str]:
     lines = md.rstrip().splitlines()
-    if len(lines) < 4:
+    if not lines:
         return {}, md
-    last4 = lines[-4:]
-    meta_block = "\n".join(last4)
+
+    tail = lines[-10:]
+    meta_lines: List[str] = []
+    for i in range(len(tail)):
+        if re.match(r"^(title|date|tags)\s*:", tail[i].strip()):
+            meta_lines = tail[i:]
+            break
+
+    if not meta_lines:
+        return {}, md
+
+    meta_block = "\n".join(meta_lines)
     meta: Dict[str, Any] = {}
     if yaml:
         try:
@@ -103,32 +113,38 @@ def extract_last4_meta(md: str) -> Tuple[Dict[str, Any], str]:
                 meta = {k: y.get(k) for k in ("title", "date", "tags") if k in y}
         except Exception:
             pass
+
     if not meta:
-        for line in last4:
+        for line in meta_lines:
             m = re.match(r"^\s*(title|date|tags)\s*:\s*(.+?)\s*$", line)
             if m:
                 k, v = m.group(1), m.group(2).strip()
                 meta[k] = v
+
+    if not meta:
+        return {}, md
+
     title = (meta.get("title") or "").strip().strip("'\"")
     date = normalize_date(meta.get("date"))
     tags = normalize_tags(meta.get("tags"))
     meta_norm = {"title": title, "date": date, "tags": tags}
-    cleaned = "\n".join(lines[:-4]).rstrip() + "\n"
+
+    cleaned = "\n".join(lines[:-len(meta_lines)]).rstrip() + "\n"
     return meta_norm, cleaned
 
 def collect_post(lang_dir: Path, md_path: Path, dry_run: bool=False, verbose: bool=False) -> Optional[PostMeta]:
     slug = md_path.stem
     md = safe_read_text(md_path)
-    footer_meta, cleaned = extract_last4_meta(md)
+    footer_meta, cleaned = extract_meta_block(md)
     title = footer_meta.get("title") or first_h1_as_title(md) or slug
     date = footer_meta.get("date") or ""
     tags = footer_meta.get("tags") or []
     if cleaned != md and not dry_run:
         md_path.write_text(cleaned, encoding="utf-8")
         if verbose:
-            print(f"[clean] stripped last 4 lines as meta: {md_path.name}")
+            print(f"[clean] stripped meta block: {md_path.name}")
     elif cleaned != md and dry_run and verbose:
-        print(f"[dry-run] would strip last 4 lines as meta: {md_path.name}")
+        print(f"[dry-run] would strip meta block: {md_path.name}")
     if verbose:
         print(f"[info] {lang_dir.name}/{md_path.name} → title='{title}', date='{date}', tags={tags}")
     return PostMeta(slug=slug, title=title, date=date, tags=tags)
@@ -158,7 +174,7 @@ def write_manifest(lang_dir: Path, posts: List[PostMeta], dry_run: bool=False, v
     existing = load_existing_manifest(lang_dir, verbose=verbose)
     existing_map = {p["slug"]: p for p in existing}
     for p in posts:
-        if p.slug not in existing_map:  # 절대 갱신하지 않고 신규만 추가
+        if p.slug not in existing_map:
             existing_map[p.slug] = p.as_dict()
     merged = list(existing_map.values())
     merged_posts = sort_by_date_desc([PostMeta(**p) for p in merged])
