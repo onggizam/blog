@@ -13,11 +13,12 @@ During that process, we **compared multiple tools using a scoring method**. Rath
 
 ## Pre-evaluation: CI Tool Scoring Summary
 
-| CI Tool            | Total Score | One-line Conclusion                                                                    |
-| ------------------ | ----------: | -------------------------------------------------------------------------------------- |
-| **GitHub Actions** |  **96/100** | Overwhelming dev experience, ecosystem, and flexibility. Best for GitHub-centric work. |
-| **Drone CI**       |      76/100 | Lightweight and fast, but manual setup/ecosystem/advanced features hold it back.       |
-| **Jenkins X**      |      72/100 | K8s-native with deep GitOps focus, but high adoption/maintenance difficulty.           |
+- **GitHub Actions** : **96/100**
+  - Overwhelming dev experience, ecosystem, and flexibility. Best for GitHub-centric work.
+- Drone CI : 76/100
+  - Lightweight and fast, but manual setup/ecosystem/advanced features hold it back.
+- Jenkins X : 72/100
+  - K8s-native with deep GitOps focus, but high adoption/maintenance difficulty.
 
 **Why was GitHub Actions #1?**
 
@@ -30,10 +31,10 @@ During that process, we **compared multiple tools using a scoring method**. Rath
 
 ## Pre-evaluation: CD Tool Scoring Summary
 
-| CD Tool                      | Total Score | One-line Conclusion                                                                             |
-| ---------------------------- | ----------: | ----------------------------------------------------------------------------------------------- |
-| **ArgoCD**                   |  **97/100** | The GitOps classic. Pull-based sync, drift detection, one-click rollback, strong multi-cluster. |
-| **GitHub Actions (CD only)** |      70/100 | Great triggers/UX but lacks state sync/auto rollback/drift detection. Not a GitOps replacement. |
+- **ArgoCD** : **97/100**
+  - The GitOps classic. Pull-based sync, drift detection, one-click rollback, strong multi-cluster.
+- GitHub Actions(CD only) : 70/100
+  - Great triggers/UX but lacks state sync/auto rollback/drift detection. Not a GitOps replacement.
 
 **Why was ArgoCD essential?**
 
