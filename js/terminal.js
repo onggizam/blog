@@ -34,40 +34,45 @@ const COMMANDS = {
   ls(opt, stdin) {
     if (STATE.posts.length === 0) {
       const msg = t(STATE, "no_posts");
-      if (stdin) return [msg];
+      if (stdin !== null) return [msg];
       print(msg);
       return;
     }
     if (opt && !["-al", "-topic"].includes(opt)) {
-      if (stdin) return [t(STATE, "bad_arg")];
+      if (stdin !== null) return [t(STATE, "bad_arg")];
       print(t(STATE, "bad_arg"), "error");
       return;
     }
+
     const showAll = opt === "-al";
     const showTopic = opt === "-topic";
 
     const lines = STATE.posts.map((p) => {
-      const fname = `${p.slug}.md`;
+      const title = p.title || p.slug;
+
       if (showAll) {
-        const size = String((p.title || p.slug).length * 32).padStart(6, " ");
+        const size = String(title.length * 32).padStart(6, " ");
         const date = (p.date || "").padEnd(12, " ");
-        return `-rw-r--r-- 1 ${STATE.user} ${STATE.user} ${size} ${date} ${fname}`;
+        return `-rw-r--r-- 1 ${STATE.user} ${STATE.user} ${size} ${date} ${title}`;
       } else if (showTopic) {
         const tags = (p.tags || []).join(", ") || "-";
-        return `${fname}\t[${tags}]`;
-      } else {
-        return fname;
+        return `${title}\t[${tags}]`;
       }
+      return title;
     });
 
-    if (stdin) return lines;
-    lines.forEach((l) =>
-      print(
-        `<span class="file">${l.replace(/\t.*/, "")}</span>${
-          l.includes("\t") ? l.slice(l.indexOf("\t")) : ""
-        }`
-      )
-    );
+    if (stdin !== null) return lines;
+
+    lines.forEach((l) => {
+      const tab = l.indexOf("\t");
+      if (tab >= 0) {
+        const name = l.slice(0, tab);
+        const rest = l.slice(tab);
+        print(`<span class="file">${name}</span>${rest}`);
+      } else {
+        print(`<span class="file">${l}</span>`);
+      }
+    });
   },
 
   /* open: arg가 없고 stdin이 있으면 첫 줄을 파일명으로 사용 */
@@ -86,13 +91,31 @@ const COMMANDS = {
       print(msg, "error");
       return;
     }
-    const slug = targetArg.endsWith(".md") ? targetArg.slice(0, -3) : targetArg;
-    let found = STATE.indexBySlug.get(slug);
+
+    // slug 형태로 입력된 경우
+    let slug = targetArg.endsWith(".md") ? targetArg.slice(0, -3) : targetArg;
+    let post = STATE.indexBySlug.get(slug);
+
+    // slug 매칭 실패 → title 매칭 시도
+    if (!post) {
+      post = STATE.posts.find(
+        (p) => p.title.toLowerCase() === targetArg.toLowerCase()
+      );
+    }
+
+    if (!post) {
+      const msg = t(STATE, "not_found");
+      if (stdin) return [msg];
+      print(msg, "error");
+      return;
+    }
+
     try {
-      await openPost(found ? found.slug : slug);
+      await openPost(post.slug);
       setTheme("blog");
       showBlogPost();
-      if (!stdin) print(t(STATE, "opened", `${slug}.md`), "ok");
+      if (!stdin) print(t(STATE, "opened", `${post.title}`), "ok");
+      history.pushState({ slug: post.slug }, "", `/post/${post.slug}`);
     } catch {
       const msg = t(STATE, "not_found");
       if (stdin) return [msg];
@@ -276,7 +299,7 @@ const AC = {
     if (cmd === "wc") return ["-l"];
     if (cmd === "cut") return ["-f 1", "-f 2"];
     if (cmd === "open") {
-      return Array.from(new Set(getMdFilenames()));
+      return STATE.posts.map((p) => p.title);
     }
     return [];
   },
