@@ -1,5 +1,7 @@
 # Migrating from GitLab to GitHub
 
+_by Seunggi Hong_
+
 Due to a recent infrastructure overhaul, I had no choice but to **migrate from GitLab to GitHub**.
 Since it’s not something most people do often, I wanted to document the process and what I learned.
 

@@ -1,5 +1,7 @@
 # Building an HA Kubernetes Cluster
 
+_by Seunggi Hong_
+
 There was always one thing that bothered me when using Kubernetes:
 the anxiety of “What if it goes down?”
 

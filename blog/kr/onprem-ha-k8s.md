@@ -1,5 +1,7 @@
 # HA Kubernetes Cluster 구축기
 
+_by Seunggi Hong_
+
 쿠버네티스를 쓰면서 늘 마음에 걸리던 게 하나 있었다.
 
 바로 "중단되면 어떻게 하지?"라는 불안이었다.

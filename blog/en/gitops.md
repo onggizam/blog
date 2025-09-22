@@ -1,5 +1,7 @@
 # GitOps Adoption Story
 
+_by Seunggi Hong_
+
 In Kubernetes operations, CI/CD is essentially the heart of the service. For a while, we used a **Jenkins + ArgoCD** combination. But when the **architect left without any documentation**, the problems began.
 The remaining Jenkins jobs became a black box, and even small changes felt like big risks. We concluded **“this is unmaintainable as-is”**, and along with **migrating repositories from GitLab to GitHub**, we decided to completely rebuild CI/CD.
 

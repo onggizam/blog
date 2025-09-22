@@ -4,25 +4,69 @@
       "slug": "how-to-manage-multi-clusters",
       "title": "여러 쿠버네티스 클러스터를 오가며 – 내가 불편함을 해결한 방식",
       "date": "2025-09-10",
-      "tags": ["k8s", "multi-cluster", "CLI"]
+      "tags": [
+        "k8s",
+        "multi-cluster",
+        "CLI"
+      ]
     },
     {
       "slug": "onprem-ha-k8s",
       "title": "HA Kubernetes Cluster 구축기",
       "date": "2025-09-03",
-      "tags": ["kubernetes", "HA구성"]
+      "tags": [
+        "kubernetes",
+        "HA구성"
+      ]
     },
     {
       "slug": "code-repo-migration",
       "title": "GitLab에서 GitHub으로 레포지토리 마이그레이션",
       "date": "2025-06-17",
-      "tags": ["GitHub", "GitLab", "Migration"]
+      "tags": [
+        "GitHub",
+        "GitLab",
+        "Migration"
+      ]
     },
     {
       "slug": "gitops",
       "title": "GitOps 도입기",
       "date": "2025-06-10",
-      "tags": ["GitOps", "CICD"]
+      "tags": [
+        "GitOps",
+        "CICD"
+      ]
+    },
+    {
+      "slug": "time-series-etl-pipeline",
+      "title": "시계열 자원 사용량 데이터를 다루며 – ETL 파이프라인 구축기",
+      "date": "2025-03-31",
+      "tags": [
+        "ETL",
+        "BigData",
+        "Airflow"
+      ]
+    },
+    {
+      "slug": "mlops-my-paper",
+      "title": "컨테이너 기반 클라우드 위에서 구현하는 Scalable MLOps",
+      "date": "2024-12-21",
+      "tags": [
+        "MLOps",
+        "Paper",
+        "Kubernetes"
+      ]
+    },
+    {
+      "slug": "distributed-trainig-tools",
+      "title": "분산 학습, Horovod에서 Ray로 갈아탄 이유",
+      "date": "2024-09-10",
+      "tags": [
+        "Horovod",
+        "Ray",
+        "Distributed-Training"
+      ]
     }
   ]
 }
