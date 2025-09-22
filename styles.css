@@ -536,3 +536,23 @@ body.theme-terminal #blog-scene {
   border: 1px solid var(--border);
   border-radius: 6px;
 }
+
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.markdown th,
+.markdown td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  vertical-align: top;
+}
+.markdown thead th {
+  background: #1f1f1f;
+  font-weight: 600;
+}
+.markdown tbody tr:nth-child(even) {
+  background: #161616;
+}
