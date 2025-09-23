@@ -6,14 +6,10 @@ import {
   printSuggestions,
   longestCommonPrefix,
 } from "./utils.js";
-import { sceneSwitch, setTheme, setLang, showBlogPost } from "./ui.js";
-import {
-  loadManifest,
-  renderPostList,
-  openPost,
-  getMdFilenames,
-} from "./posts.js";
+import { setTheme, setLang, showBlogPost } from "./ui.js";
+import { loadManifest, renderPostList, openPost } from "./posts.js";
 
+import { navigateToPostBySlug } from "./router.js";
 /* =========================
    Pipeline-enabled Terminal
    - supports: |
@@ -79,7 +75,7 @@ const COMMANDS = {
   async open(arg, stdin) {
     let targetArg = arg?.trim();
     if (
-      (!targetArg || targetArg.length === 0) &&
+      (!targetArg || !targetArg.length) &&
       Array.isArray(stdin) &&
       stdin.length
     ) {
@@ -87,40 +83,33 @@ const COMMANDS = {
     }
     if (!targetArg) {
       const msg = t(STATE, "bad_arg");
-      if (stdin) return [msg];
+      if (stdin !== null) return [msg];
       print(msg, "error");
       return;
     }
 
-    // slug 형태로 입력된 경우
     let slug = targetArg.endsWith(".md") ? targetArg.slice(0, -3) : targetArg;
     let post = STATE.indexBySlug.get(slug);
-
-    // slug 매칭 실패 → title 매칭 시도
     if (!post) {
       post = STATE.posts.find(
         (p) => p.title.toLowerCase() === targetArg.toLowerCase()
       );
+      if (post) slug = post.slug;
     }
-
     if (!post) {
       const msg = t(STATE, "not_found");
-      if (stdin) return [msg];
+      if (stdin !== null) return [msg];
       print(msg, "error");
       return;
     }
 
-    try {
-      await openPost(post.slug);
-      setTheme("blog");
-      showBlogPost();
-      if (!stdin) print(t(STATE, "opened", `${post.title}`), "ok");
-      history.pushState({ slug: post.slug }, "", `/post/${post.slug}`);
-    } catch {
-      const msg = t(STATE, "not_found");
-      if (stdin) return [msg];
-      print(msg, "error");
-    }
+    await openPost(slug);
+    setTheme("blog");
+    showBlogPost();
+    if (stdin === null) print(t(STATE, "opened", post.title || slug), "ok");
+
+    // 해시 기반 주소
+    navigateToPostBySlug(slug);
   },
 
   /* theme / translate / clear : 파이프라인에서는 부가효과만 내고 line pass-through */
@@ -435,7 +424,7 @@ function freezePromptLine(line, raw) {
   line.classList.add("readonly");
   const echo = document.createElement("span");
   echo.className = "echo";
-  echo.textContent = raw; // 앞공백 추가 안 함
+  echo.textContent = raw;
   line.appendChild(echo);
   const inp = line.querySelector(".prompt-input");
   if (inp) inp.style.display = "none";

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./styles.css" />
     <!-- marked.js -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- (선택) DOMPurify: XSS 방어용 -->
+    <!-- DOMPurify: XSS 방어용 -->
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
     <!-- highlight.js CSS -->
     <link
@@ -97,11 +97,11 @@
     </div>
     <script>
       marked.setOptions({
-        gfm: true, // GitHub Flavored Markdown
-        breaks: false, // 단일 줄바꿈을 <br>로 바꿀지 여부
-        headerIds: true, // 헤더에 id 부여(h1~h6)
-        mangle: false, // 헤더 id 난독화 비활성화
-        tables: true, // 표 활성(GFM에 포함이지만 명시)
+        gfm: true,
+        breaks: false,
+        headerIds: true,
+        mangle: false,
+        tables: true,
         highlight: (code, lang) => {
           try {
             if (lang && hljs.getLanguage(lang)) {
@@ -111,7 +111,7 @@
           try {
             return hljs.highlightAuto(code).value;
           } catch (_) {}
-          return code; // 실패 시 원본
+          return code;
         },
       });
     </script>

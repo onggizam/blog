@@ -2,6 +2,7 @@ import { STATE } from "./state.js";
 import { t } from "./i18n.js";
 import { print } from "./utils.js";
 import { showBlogPost } from "./ui.js";
+import { navigateToPostBySlug } from "./router.js";
 
 const postListEl = document.getElementById("post-list");
 const postTitleEl = document.getElementById("post-title");
@@ -34,7 +35,6 @@ export async function loadManifest() {
 export async function reloadPostsForLang() {
   await loadManifest();
   renderPostList("");
-  // 포스트 뷰는 유지하지 않고 목록만 갱신 (원하면 여기서 postContentEl 비우기)
 }
 
 async function fetchPost(slug) {
@@ -86,8 +86,8 @@ export function renderPostList(query = STATE.searchQuery) {
           .join("")}
       </div>
     `;
+
     li.addEventListener("click", async (e) => {
-      // 태그 클릭은 목록 필터링, 항목 본문 열기와 충돌 방지
       const tagBtn = e.target.closest(".tag");
       if (tagBtn) {
         const tag = tagBtn.dataset.tag || "";
@@ -100,9 +100,12 @@ export function renderPostList(query = STATE.searchQuery) {
         e.stopPropagation();
         return;
       }
+
       await openPost(p.slug);
       showBlogPost();
+      navigateToPostBySlug(p.slug);
     });
+
     postListEl.appendChild(li);
   });
 }
@@ -116,24 +119,14 @@ export async function openPost(slug) {
 
     postTitleEl.textContent = title;
 
-    let metaLine = filename;
-    if (meta?.date) metaLine += ` • ${meta.date}`;
-
-    let tagsLine = "";
-    if (meta?.tags?.length) {
-      tagsLine = `<div class="tags-inline">
-        ${meta.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
-      </div>`;
-    }
-
     postMetaEl.innerHTML = `
-  ${filename}${meta?.date ? ` • ${meta.date}` : ""}
-  ${
-    meta?.tags?.length
-      ? meta.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")
-      : ""
-  }
-`;
+      ${filename}${meta?.date ? ` • ${meta.date}` : ""}
+      ${
+        meta?.tags?.length
+          ? meta.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")
+          : ""
+      }
+    `;
 
     postContentEl.innerHTML = renderMarkdown(md);
     print(t(STATE, "opened", filename), "ok");
@@ -152,7 +145,7 @@ export function renderMarkdown(md) {
   const rawHtml = marked.parse(md || "");
   const safeHtml = window.DOMPurify
     ? DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } })
-    : rawHtml; // DOMPurify 미사용 시 이 라인으로 렌더(보안 주의)
+    : rawHtml;
   return safeHtml;
 }
 
